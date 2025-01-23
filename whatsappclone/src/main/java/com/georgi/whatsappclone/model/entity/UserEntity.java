@@ -1,14 +1,13 @@
 package com.georgi.whatsappclone.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,6 +16,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 public class UserEntity extends BaseAuditingEntity{
+
+    private static final int LAST_ACTIVE_INTERVAL = 5;
 
     @Id
     private String id;
@@ -28,4 +29,15 @@ public class UserEntity extends BaseAuditingEntity{
     private String email;
 
     private LocalDateTime lastSeen;
+
+    @OneToMany(mappedBy = "sender")
+    private List<ChatEntity> chatAsSender;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<ChatEntity> chatAsReceiver;
+
+    @Transient
+    public boolean isUserOnline() {
+        return lastSeen != null && lastSeen.isAfter(LocalDateTime.now().minusMinutes(LAST_ACTIVE_INTERVAL));
+    }
 }
