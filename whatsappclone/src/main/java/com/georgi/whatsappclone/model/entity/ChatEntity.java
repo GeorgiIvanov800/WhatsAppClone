@@ -1,5 +1,6 @@
 package com.georgi.whatsappclone.model.entity;
 
+import com.georgi.whatsappclone.model.constant.ChatConstants;
 import com.georgi.whatsappclone.model.enums.MessageState;
 import com.georgi.whatsappclone.model.enums.MessageType;
 import jakarta.persistence.*;
@@ -17,6 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "chat")
+@NamedQuery(name = ChatConstants.FIND_CHAT_BY_SENDER_ID,
+        query = "SELECT DISTINCT c FROM ChatEntity c WHERE c.sender.id = :senderId OR c.receiver.id = sender.id ORDER BY createdDate DESC")
+@NamedQuery(name = ChatConstants.FIND_CHAT_BY_SENDER_ID_AND_RECEIVER_ID,
+query = "SELECT DISTINCT c FROM ChatEntity c WHERE (c.sender.id = :senderId AND c.receiver.id = :receiverId) OR (c.sender.id = :receiverId AND c.receiver.id = :senderId)")
 public class ChatEntity extends BaseAuditingEntity {
 
     @Id

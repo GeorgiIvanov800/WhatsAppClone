@@ -1,5 +1,6 @@
 package com.georgi.whatsappclone.model.entity;
 
+import com.georgi.whatsappclone.model.constant.MessageConstants;
 import com.georgi.whatsappclone.model.enums.MessageState;
 import com.georgi.whatsappclone.model.enums.MessageType;
 import jakarta.persistence.*;
@@ -15,6 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "messages")
+@NamedQuery(name = MessageConstants.FIND_MESSAGES_BY_CHAT_ID,
+        query = "SELECT m FROM MessageEntity m WHERE m.chat.id = :chatId ORDER BY m.createdDate" )
+@NamedQuery(name = MessageConstants.SET_MESSAGES_TO_SEEN_BY_CHAT,
+query = "UPDATE MessageEntity SET state = :newState WHERE chat.id = :chatId")
+
 public class MessageEntity extends BaseAuditingEntity {
 
     @Id
