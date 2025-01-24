@@ -1,6 +1,7 @@
 package com.georgi.whatsappclone.configuration.mapper;
 
 import com.georgi.whatsappclone.model.entity.UserEntity;
+import com.georgi.whatsappclone.model.entity.UserResponse;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -32,5 +33,17 @@ public class UserMapper {
         user.setLastSeen(LocalDateTime.now());
 
         return user;
+    }
+
+    public UserResponse toUserResponse(UserEntity userEntity) {
+
+        return UserResponse.builder()
+                .id(userEntity.getId())
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .lastSeen(userEntity.getLastSeen())
+                .email(userEntity.getEmail())
+                .isOnline(userEntity.isUserOnline())
+                .build();
     }
 }
