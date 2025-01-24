@@ -2,6 +2,7 @@ package com.georgi.whatsappclone.configuration.mapper;
 
 import com.georgi.whatsappclone.model.MessageResponse;
 import com.georgi.whatsappclone.model.entity.MessageEntity;
+import com.georgi.whatsappclone.utils.FileUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +19,7 @@ public class MessageMapper {
                 .type(message.getType())
                 .state(message.getState())
                 .createdAt(message.getCreatedDate())
-                //TODO read the media file
+                .media(FileUtils.readFileFromLocation(message.getMediaFilePath()))
                 .build();
     }
 }
