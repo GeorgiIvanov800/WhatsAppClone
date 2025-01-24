@@ -6,6 +6,7 @@ import com.georgi.whatsappclone.model.MessageResponse;
 import com.georgi.whatsappclone.model.entity.ChatEntity;
 import com.georgi.whatsappclone.model.entity.MessageEntity;
 import com.georgi.whatsappclone.model.enums.MessageState;
+import com.georgi.whatsappclone.model.enums.MessageType;
 import com.georgi.whatsappclone.repository.ChatRepository;
 import com.georgi.whatsappclone.repository.MessageRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -68,6 +69,17 @@ public class MessageService {
         final String senderId = getSenderId(chat, authentication);
         final String receiverId = getReceiverId(chat, authentication);
         final String filePath = fileService.saveFile(file, senderId);
+
+        MessageEntity message = new MessageEntity();
+        message.setChat(chat);
+        message.setSenderId(senderId);
+        message.setReceiverId(receiverId);
+        message.setType(MessageType.IMAGE);
+        message.setState(MessageState.SEEN);
+        message.setMediaFilePath(filePath);
+        messageRepository.save(message);
+
+        //TODO notification
     }
 
     private String getSenderId(ChatEntity chat, Authentication authentication) {
