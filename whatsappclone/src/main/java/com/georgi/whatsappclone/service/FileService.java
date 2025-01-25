@@ -1,5 +1,6 @@
 package com.georgi.whatsappclone.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
@@ -14,8 +15,10 @@ import java.nio.file.Paths;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class FileService {
-    @Value("${spring.application.file.uploads.media-output-path}")
+
+    @Value("${application.file.uploads.media-output-path}")
     private String fileUploadPath;
 
     public String saveFile(@NonNull MultipartFile sourceFile, @NonNull String userId) {

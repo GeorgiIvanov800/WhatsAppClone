@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 
 @Slf4j
@@ -24,7 +24,7 @@ public class FileUtils {
             Path file = new File(fileUrl).toPath();
             return Files.readAllBytes(file);
         } catch (IOException e) {
-            log.error("File was not saved ", e);
+            System.out.println("Error reading file " + fileUrl);
         }
 
         return new byte[0];

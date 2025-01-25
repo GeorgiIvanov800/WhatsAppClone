@@ -26,7 +26,7 @@ spring:
 springdoc:
   default-produces-media-type: application/json
 
-  application:
-    file:
-      uploads:
-        media-output-path: ./uploads
+application:
+  file:
+    uploads:
+     media-output-path: ./uploads
