@@ -3,12 +3,15 @@ package com.georgi.whatsappclone.service;
 import com.georgi.whatsappclone.configuration.mapper.MessageMapper;
 import com.georgi.whatsappclone.model.MessageRequest;
 import com.georgi.whatsappclone.model.MessageResponse;
+import com.georgi.whatsappclone.model.Notification;
 import com.georgi.whatsappclone.model.entity.ChatEntity;
 import com.georgi.whatsappclone.model.entity.MessageEntity;
 import com.georgi.whatsappclone.model.enums.MessageState;
 import com.georgi.whatsappclone.model.enums.MessageType;
+import com.georgi.whatsappclone.model.enums.NotificationType;
 import com.georgi.whatsappclone.repository.ChatRepository;
 import com.georgi.whatsappclone.repository.MessageRepository;
+import com.georgi.whatsappclone.utils.FileUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -26,6 +29,7 @@ public class MessageService {
     private final ChatRepository chatRepository;
     private final MessageMapper mapper;
     private final FileService fileService;
+    private final NotificationService notificationService;
 
     public void save(MessageRequest messageRequest) {
 
@@ -40,7 +44,18 @@ public class MessageService {
         message.setState(MessageState.SEEN);
 
         messageRepository.save(message);
-        //TODO notification
+
+        Notification notification = Notification.builder()
+                .chatId(chat.getId())
+                .messageType(messageRequest.getType())
+                .content(messageRequest.getContent())
+                .senderId(messageRequest.getSenderId())
+                .receiverId(messageRequest.getReceiverId())
+                .type(NotificationType.MESSAGE)
+                .chatName(chat.getChatName(message.getSenderId()))
+                .build();
+
+        notificationService.sendNotification(message.getReceiverId(), notification);
     }
 
     public List<MessageResponse> findChatMessages(String chatId) {
@@ -60,7 +75,14 @@ public class MessageService {
 
         messageRepository.setMessagesToSeenByChatId(chatId, MessageState.SEEN);
 
-        //TODO Notification
+        Notification notification = Notification.builder()
+                .chatId(chat.getId())
+                .type(NotificationType.SEEN)
+                .receiverId(receiverId)
+                .receiverId(getSenderId(chat, authentication))
+                .build();
+
+        notificationService.sendNotification(receiverId, notification);
     }
 
     public void uploadMediaMessage(String chatId, MultipartFile file, Authentication authentication) {
@@ -79,7 +101,16 @@ public class MessageService {
         message.setMediaFilePath(filePath);
         messageRepository.save(message);
 
-        //TODO notification
+        Notification notification = Notification.builder()
+                .chatId(chat.getId())
+                .type(NotificationType.IMAGE)
+                .messageType(MessageType.IMAGE)
+                .senderId(senderId)
+                .receiverId(receiverId)
+                .media(FileUtils.readFileFromLocation(filePath))
+                .build();
+
+        notificationService.sendNotification(receiverId, notification);
     }
 
     private String getSenderId(ChatEntity chat, Authentication authentication) {
