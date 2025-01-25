@@ -2,8 +2,10 @@ package com.georgi.whatsappclone.web;
 
 import com.georgi.whatsappclone.model.MessageRequest;
 import com.georgi.whatsappclone.model.MessageResponse;
-import com.georgi.whatsappclone.repository.MessageRepository;
 import com.georgi.whatsappclone.service.MessageService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/messages")
 @RequiredArgsConstructor
+@Tag(name = "Massage")
 public class MessageController {
 
     private final MessageService messageService;
@@ -30,7 +33,7 @@ public class MessageController {
     @PostMapping(value = "/upload-media", consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
     public void uploadMedia(@RequestParam("chat-id")String chatId,
-                            //TODO add @Parameter from swagger
+                            @Parameter()
                             @RequestParam("file") MultipartFile file,
                             Authentication authentication
     ) {
