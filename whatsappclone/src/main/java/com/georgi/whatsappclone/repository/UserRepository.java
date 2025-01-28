@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByEmail(String email);
 
     @Query(name = UserConstants.FIND_USER_BY_PUBLIC_ID)
-    Optional<UserEntity> findByPublicId(String publicId);
+    Optional<UserEntity> findByPublicId(String publicId); // TODO add Param
 
     @Query(name = UserConstants.FIND_ALL_USERS_EXCEPT_SELF)
     List<UserEntity> findAllUsersExceptSelf(@Param("publicId") String senderId);
