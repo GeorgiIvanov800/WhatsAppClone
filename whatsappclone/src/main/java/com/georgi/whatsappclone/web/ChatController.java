@@ -33,6 +33,7 @@ public class ChatController {
 
     @GetMapping
     public ResponseEntity<List<ChatResponse>> getChat(Authentication authentication) {
+        System.out.println();
         return ResponseEntity.ok(chatService.getChatByReceiverId(authentication));
     }
 
