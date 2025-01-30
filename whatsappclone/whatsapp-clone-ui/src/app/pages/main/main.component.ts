@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatListComponent } from '../../components/chat-list/chat-list.component';
-import { ChatResponse } from '../../services/models';
-import { ChatService } from '../../services/services';
+import {ChatResponse, MessageResponse} from '../../services/models';
+import {ChatService, MassageService} from '../../services/services';
 import {KeycloakService} from '../../utils/keycloak/keycloak.service';
 
 @Component({
@@ -12,8 +12,13 @@ import {KeycloakService} from '../../utils/keycloak/keycloak.service';
 })
 export class MainComponent implements OnInit {
   chats: Array<ChatResponse> = [];
+  selectedChat: ChatResponse = {};
+  chatMessages: MessageResponse[] = [];
 
-  constructor(private chatService: ChatService, private keyCloakService: KeycloakService) {}
+
+  constructor(private chatService: ChatService,
+              private keyCloakService: KeycloakService,
+              private messageService: MassageService) {}
 
   ngOnInit(): void {
     this.getAllChats();
@@ -33,5 +38,29 @@ export class MainComponent implements OnInit {
 
   logout() {
   this.keyCloakService.logout();
+  }
+
+  chatSelected(chatResponse: ChatResponse) {
+      this.selectedChat = chatResponse;
+      this.getAllChatMessages(chatResponse.id as string);
+      this.setMessagesToSeen();
+      // this.selectedChat.unreadCount = 0;
+  }
+
+  private getAllChatMessages(chatId: string) {
+        this.messageService.getMessages({
+          'chat-id': chatId
+        }).subscribe({
+          next: (messages) => {
+            this.chatMessages = messages;
+          }
+        })
+  }
+
+  private setMessagesToSeen() {
+
+  }
+  isSelfMessage(message: MessageResponse) {
+      return message.senderId === this.keyCloakService.userId;
   }
 }
