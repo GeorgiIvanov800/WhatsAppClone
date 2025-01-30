@@ -4,10 +4,11 @@ import {ChatResponse, MessageResponse} from '../../services/models';
 import {ChatService, MassageService} from '../../services/services';
 import {KeycloakService} from '../../utils/keycloak/keycloak.service';
 import {DatePipe} from '@angular/common';
+import {PickerComponent} from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-main',
-  imports: [ChatListComponent, DatePipe],
+  imports: [ChatListComponent, DatePipe, PickerComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
@@ -15,6 +16,7 @@ export class MainComponent implements OnInit {
   chats: Array<ChatResponse> = [];
   selectedChat: ChatResponse = {};
   chatMessages: MessageResponse[] = [];
+  showEmojis: boolean = false;
 
 
   constructor(private chatService: ChatService,
@@ -63,5 +65,13 @@ export class MainComponent implements OnInit {
   }
   isSelfMessage(message: MessageResponse) {
       return message.senderId === this.keyCloakService.userId;
+  }
+
+  uploadMediaFile(target: EventTarget | null) {
+
+  }
+
+  onSelectEmojis(emojiSelected: any) {
+    
   }
 }
