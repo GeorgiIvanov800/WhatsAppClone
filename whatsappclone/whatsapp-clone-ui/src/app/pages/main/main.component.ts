@@ -3,10 +3,11 @@ import { ChatListComponent } from '../../components/chat-list/chat-list.componen
 import {ChatResponse, MessageResponse} from '../../services/models';
 import {ChatService, MassageService} from '../../services/services';
 import {KeycloakService} from '../../utils/keycloak/keycloak.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-main',
-  imports: [ChatListComponent],
+  imports: [ChatListComponent, DatePipe],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })

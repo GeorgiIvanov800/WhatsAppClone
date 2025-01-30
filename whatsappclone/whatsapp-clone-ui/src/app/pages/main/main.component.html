@@ -48,8 +48,39 @@
             @for (message of chatMessages; track message) {
               @if (isSelfMessage(message)) {
                   <div class="message-box self">
+                      <div class="d-flex flex-column">
+                        @if (message.type === 'TEXT') {
+                          <span>{{message.content}}</span>
+                        } @else if (message.media) {
+                          <img width="200" class="cursor-pointer" [src]="'data:image/jpg;base64,' + message.media" alt="">
+                        }
+                        <small class="text-black-50">
+                          {{ message.createdAt | date: "HH:mm" }}
 
+                          @if (message.state === 'SENT') {
+                            <span>
+                              <i class="fas fa-check"></i>
+                            </span>
+                          } @else {
+                            <span>
+                              <i class="fas fa-check seen"></i>
+                              <i class="fas fa-check seen ml-neg"></i>
+                            </span>
+                          }
+                        </small>
+                      </div>
                   </div>
+              } @else {
+                <div class="message-box friend">
+                  <div class="d-flex flex-column align-items-end">
+                    @if (message.type === 'TEXT') {
+                      <span>{{message.content}}</span>
+                    } @else if (message.media) {
+                      <img width="200" class="cursor-pointer" [src]="'data:image/jpg;base64,' + message.media" alt="">
+                    }
+                    <small class="text-black-50">{{message.createdAt | date: "HH:mm"}}</small>
+                  </div>
+                </div>
               }
             }
           </div>
