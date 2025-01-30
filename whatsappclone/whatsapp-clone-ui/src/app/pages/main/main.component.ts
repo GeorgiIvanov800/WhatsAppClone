@@ -5,10 +5,11 @@ import {ChatService, MassageService} from '../../services/services';
 import {KeycloakService} from '../../utils/keycloak/keycloak.service';
 import {DatePipe} from '@angular/common';
 import {PickerComponent} from '@ctrl/ngx-emoji-mart';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-main',
-  imports: [ChatListComponent, DatePipe, PickerComponent],
+  imports: [ChatListComponent, DatePipe, PickerComponent, FormsModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
@@ -17,6 +18,7 @@ export class MainComponent implements OnInit {
   selectedChat: ChatResponse = {};
   chatMessages: MessageResponse[] = [];
   showEmojis: boolean = false;
+  messageContent:string = '';
 
 
   constructor(private chatService: ChatService,
@@ -72,6 +74,18 @@ export class MainComponent implements OnInit {
   }
 
   onSelectEmojis(emojiSelected: any) {
-    
+
+  }
+
+  keyDown(event: KeyboardEvent) {
+
+  }
+
+  onClick() {
+
+  }
+
+  sendMessage() {
+
   }
 }
