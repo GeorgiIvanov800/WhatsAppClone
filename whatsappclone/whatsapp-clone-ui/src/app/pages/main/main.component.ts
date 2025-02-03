@@ -9,7 +9,8 @@ import {FormsModule} from '@angular/forms';
 import {EmojiData} from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import * as Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
-import {Notification} from './notification';
+// @ts-ignore
+import {Notification} from './models/notification';
 
 @Component({
   selector: 'app-main',
@@ -51,6 +52,7 @@ export class MainComponent implements OnInit, OnDestroy  {
     });
   }
 
+
   userProfile() {
     this.keyCloakService.accoutManagement();
   }
@@ -73,7 +75,7 @@ export class MainComponent implements OnInit, OnDestroy  {
           next: (messages) => {
             this.chatMessages = messages;
           }
-        })
+        });
   }
 
   private setMessagesToSeen() {

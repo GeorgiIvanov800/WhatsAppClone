@@ -61,13 +61,12 @@ public class ChatEntity extends BaseAuditingEntity {
     @Transient
     public String getLastMessage() {
         if (messages != null && !messages.isEmpty()) {
-            if(messages.get(0).getType() != MessageType.TEXT) {
+            if (messages.get(0).getType() != MessageType.TEXT) {
                 return "Attachment";
-            } else {
-                messages.get(0).getContent();
             }
+            return messages.get(0).getContent();
         }
-        return null;
+        return null; // No messages available
     }
 
     @Transient
