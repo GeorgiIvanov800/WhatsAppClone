@@ -7,6 +7,8 @@ import {DatePipe} from '@angular/common';
 import {PickerComponent} from '@ctrl/ngx-emoji-mart';
 import {FormsModule} from '@angular/forms';
 import {EmojiData} from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import * as Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
 
 @Component({
   selector: 'app-main',
@@ -20,13 +22,15 @@ export class MainComponent implements OnInit {
   chatMessages: MessageResponse[] = [];
   showEmojis: boolean = false;
   messageContent:string = '';
-
+  socketClient: any = null;
+  private notificationSubscription: any;
 
   constructor(private chatService: ChatService,
               private keyCloakService: KeycloakService,
               private messageService: MassageService) {}
 
   ngOnInit(): void {
+    this.initWebSocket();
     this.getAllChats();
   }
 
@@ -136,5 +140,22 @@ export class MainComponent implements OnInit {
       return this.selectedChat.receiverId as string;
     }
     return this.selectedChat.senderId as string;
+  }
+
+  private initWebSocket() {
+    if (this.keyCloakService.keycloak.tokenParsed?.sub) {
+      let ws = new SockJS('http://localhost:8080/ws');
+      this.socketClient = Stomp.over(ws);
+      const subUrl =  `/user/${this.keyCloakService.keycloak.tokenParsed?.sub}/chat`;
+      this.socketClient.connect({'Authorization': 'Bearer ' + this.keyCloakService.keycloak.token},
+        () => {
+          this.notificationSubscription = this.socketClient.subscribe(subUrl,
+            (message: any) => {
+                const notification = Notification = JSON.parse(message.body);
+            },
+            () => console.error("Error while connection to WebSocket"));
+        }
+        );
+    }
   }
 }
